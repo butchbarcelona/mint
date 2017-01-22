@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent serviceIntent = new Intent(MainActivity.this,NoiseAlertService.class);
                 MainActivity.this.startService(serviceIntent);
+                finish();
             }
         });
 

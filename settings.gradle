@@ -1,1 +1,1 @@
-include ':app', ':noisedetector'
+include ':ipcam', ':noisedetector'
