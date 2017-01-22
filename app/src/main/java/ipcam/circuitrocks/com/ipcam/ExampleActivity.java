@@ -9,6 +9,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.media.Image;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -20,17 +22,30 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
 
 import ipcam.circuitrocks.com.ipcam.ble.BlunoLibrary;
 
 
-public class ExampleActivity extends BlunoLibrary implements View.OnClickListener
-{
+public class ExampleActivity extends BlunoLibrary implements View.OnClickListener {
+
+
     private VideoEnabledWebView webView;
     private VideoEnabledWebChromeClient webChromeClient;
 
-    ImageButton btnUp, btnDown, btnLeft, btnRight;
+    ImageButton btnUp, btnDown, btnLeft, btnRight, btnClockwise, btnCounter;
+    ProgressBar progress;
+
+    String URL = "http://192.168.1.37:8080";
 
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
 
@@ -39,14 +54,12 @@ public class ExampleActivity extends BlunoLibrary implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_example);
 
+        progress = (ProgressBar) findViewById(R.id.progressBar);
+
         onCreateProcess();
         serialBegin(115200);
 
         requestPermission();
-      /*  else{
-            init();
-        }*/
-
 
     }
 
@@ -68,16 +81,27 @@ public class ExampleActivity extends BlunoLibrary implements View.OnClickListene
     }
 
     public void init(){
+        showAlertDialog(); //ask for URL
+    }
+
+
+    public void setUp(){
         buttonScanOnClickProcess();
 
         btnUp = (ImageButton) findViewById(R.id.btn_up);
         btnDown = (ImageButton) findViewById(R.id.btn_down);
         btnLeft = (ImageButton) findViewById(R.id.btn_left);
         btnRight = (ImageButton) findViewById(R.id.btn_right);
+        btnClockwise = (ImageButton) findViewById(R.id.btn_clockwise);
+        btnCounter = (ImageButton) findViewById(R.id.btn_counter);
+
         btnUp.setOnClickListener(this);
         btnDown.setOnClickListener(this);
         btnLeft.setOnClickListener(this);
         btnRight.setOnClickListener(this);
+
+        btnCounter.setOnClickListener(this);
+        btnClockwise.setOnClickListener(this);
 
         // Save the web view
         webView = (VideoEnabledWebView)findViewById(R.id.webView);
@@ -134,8 +158,39 @@ public class ExampleActivity extends BlunoLibrary implements View.OnClickListene
         webView.setWebViewClient(new InsideWebViewClient());
 
         // Navigate anywhere you want, but consider that this classes have only been tested on YouTube's mobile site
-        webView.loadUrl("http://192.168.1.37:8080/jsfs.html");
+        String url = URL+"/jsfs.html";
+        Log.d("ipcam",url);
+        webView.loadUrl(url);
 
+        progress.setVisibility(View.GONE);
+
+
+
+    }
+
+    public void showAlertDialog(){
+
+        final View view = this.getLayoutInflater().inflate(R.layout.dialog_ip, null);
+        final EditText etURL = (EditText) view.findViewById(R.id.et_site);
+
+        new AlertDialog.Builder(this)
+            .setTitle("Input URL of IP Camera")
+            .setView(view)
+            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+
+                    //save URL
+                    URL = Uri.parse(etURL.getText().toString().trim()).toString();
+                    new WebViewSetOrientation().execute();
+                }
+            })
+            /*.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    // do nothing
+
+                }
+            })*/
+            .show();
     }
 
     @Override
@@ -191,6 +246,12 @@ public class ExampleActivity extends BlunoLibrary implements View.OnClickListene
                 break;
             case R.id.btn_right:
                 serialSend("d");
+                break;
+            case R.id.btn_clockwise:
+                serialSend("z");
+                break;
+            case R.id.btn_counter:
+                serialSend("x");
                 break;
         }
     }
@@ -274,6 +335,92 @@ public class ExampleActivity extends BlunoLibrary implements View.OnClickListene
     protected void onDestroy() {
         super.onDestroy();
         onDestroyProcess();                                                        //onDestroy Process by BlunoLibrary
+    }
+
+
+    public class WebViewSetOrientation extends AsyncTask<Void, Void, Void> {
+
+        String strUrl = //URL.replace("http://","")+
+                "http://192.168.1.37:8080/settings/orientation?set=landscape";
+        StringBuilder jsonResults;
+
+        @Override
+        protected void onPreExecute() {
+
+            super.onPreExecute();
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            Log.d("metal", "url:" + strUrl);
+            HttpURLConnection conn = null;
+            jsonResults = new StringBuilder();
+            try {
+
+                URL url = new URL( Uri.parse(URL + "/settings/orientation?set=landscape").toString());
+                Log.d("metal", "url:" + url.getHost());
+
+                conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(30000);
+                conn.setConnectTimeout(30000);
+                conn.setRequestMethod("GET");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+                conn.connect();
+
+                InputStreamReader in = new InputStreamReader(conn.getInputStream());
+
+                int read;
+                char[] buff = new char[1024];
+                while ((read = in.read(buff)) != -1) {
+                    jsonResults.append(buff, 0, read);
+                }
+
+            } catch (MalformedURLException e) {
+                Log.e("metal", "Error processing URL", e);
+                jsonResults = null;
+                return null;
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e("metal", "Error connecting API", e);
+                jsonResults = null;
+                return null;
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("metal", "Error connecting API", e);
+                jsonResults = null;
+            }
+            finally {
+                if (conn != null) {
+                    conn.disconnect();
+                }
+            }
+
+            return null;
+
+        }
+
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+
+            if(jsonResults == null){
+                new AlertDialog.Builder(ExampleActivity.this)
+                        .setTitle("Error")
+                        .setMessage("Could not connect to:"+URL)
+                        .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                showAlertDialog();
+                            }
+                        })
+                        .show();
+            }else {
+                setUp();
+            }
+        }
     }
 
 }

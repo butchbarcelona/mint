@@ -20,7 +20,7 @@
         android:theme="@style/AppTheme"
         android:hardwareAccelerated="true" >
         <activity android:name=".ExampleActivity"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

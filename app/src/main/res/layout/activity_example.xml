@@ -53,42 +53,73 @@
         android:layout_height="match_parent">
 
 
-        <ImageButton
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            app:srcCompat="@android:drawable/ic_media_play"
-            android:id="@+id/btn_up"
-            android:layout_above="@+id/btn_right"
-            android:layout_toEndOf="@+id/btn_down" />
-
-        <ImageButton
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            app:srcCompat="@android:drawable/ic_media_play"
-            android:id="@+id/btn_right"
-            android:layout_alignParentBottom="true"
-            android:layout_alignStart="@+id/btn_down"
-            android:layout_marginBottom="27dp"
-            android:rotation="90"/>
-
-        <ImageButton
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            app:srcCompat="@android:drawable/ic_media_play"
-            android:id="@+id/btn_down"
-            android:layout_alignTop="@+id/btn_up"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="18dp"
-            android:rotation="180"/>
 
         <ImageButton
             android:layout_width="50dp"
             android:layout_height="50dp"
             app:srcCompat="@android:drawable/ic_media_play"
             android:id="@+id/btn_left"
-            android:layout_above="@+id/btn_down"
-            android:layout_alignStart="@+id/btn_down"
-            android:rotation="-90"/>
+            android:rotation="180"
+            android:layout_alignTop="@+id/btn_right"
+            android:layout_toStartOf="@+id/btn_up" />
+
+        <ImageButton
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:srcCompat="@android:drawable/ic_media_play"
+            android:id="@+id/btn_right"
+            android:rotation="360"
+            android:layout_marginBottom="36dp"
+            android:layout_alignBottom="@+id/btn_down"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="27dp" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@android:drawable/ic_menu_revert"
+            android:id="@+id/btn_clockwise"
+            android:scaleY="-1"
+            android:layout_alignTop="@+id/btn_counter"
+            android:layout_toEndOf="@+id/btn_counter"
+            android:layout_marginStart="13dp" />
+
+        <ImageButton
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:srcCompat="@android:drawable/ic_media_play"
+            android:id="@+id/btn_down"
+            android:rotation="90"
+            android:layout_alignParentBottom="true"
+            android:layout_toStartOf="@+id/btn_right" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@android:drawable/ic_menu_revert"
+            android:id="@+id/btn_counter"
+            android:rotation="180"
+            android:layout_marginStart="14dp"
+            android:layout_alignBottom="@+id/btn_left"
+            android:layout_alignParentStart="true" />
+
+        <ImageButton
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:srcCompat="@android:drawable/ic_media_play"
+            android:id="@+id/btn_up"
+            android:rotation="270"
+            android:layout_above="@+id/btn_right"
+            android:layout_toStartOf="@+id/btn_right" />
+
     </RelativeLayout>
 
+    <ProgressBar
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/progressBar"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:padding="150dp" />
 </FrameLayout>

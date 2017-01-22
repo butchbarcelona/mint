@@ -15,6 +15,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.IBinder;
@@ -23,6 +24,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -141,12 +143,13 @@ public abstract  class BlunoLibrary  extends AppCompatActivity {
 
               @Override
               public void onClick(DialogInterface dialog, int which) {
+
+                  //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                   final BluetoothDevice device = mLeDeviceListAdapter.getDevice(which);
                   if (device == null)
                       return;
                   scanLeDevice(false);
-                  System.out.println("onListItemClick " + device.getName().toString());
-
+                  System.out.println("onListItemClick " + (device.getName()));
                   System.out.println("Device Name:" + device.getName() + "   " + "Device Name:" + device.getAddress());
 
                   mDeviceName = device.getName().toString();
@@ -167,12 +170,15 @@ public abstract  class BlunoLibrary  extends AppCompatActivity {
 //                          onConectionStateChange(mConnectionState);
                       }
                   }
+
               }
           })
           .setOnCancelListener(new DialogInterface.OnCancelListener() {
 
               @Override
               public void onCancel(DialogInterface arg0) {
+
+                  //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                   System.out.println("mBluetoothAdapter.stopLeScan");
 
 //                  mConnectionState = connectionStateEnum.isToScan;
@@ -180,8 +186,12 @@ public abstract  class BlunoLibrary  extends AppCompatActivity {
                   mScanDeviceDialog.dismiss();
 
                   scanLeDevice(false);
+
               }
           }).create();
+
+        mScanDeviceDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
     }
 

@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/mint.iml" filepath="$PROJECT_DIR$/mint.iml" />
+      <module fileurl="file://$PROJECT_DIR$/noisedetector/noisedetector.iml" filepath="$PROJECT_DIR$/noisedetector/noisedetector.iml" />
     </modules>
   </component>
 </project>
