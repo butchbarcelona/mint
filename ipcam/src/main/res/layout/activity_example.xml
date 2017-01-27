@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ExampleActivity">
+    tools:context=".MainActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -35,7 +35,7 @@
 
             <!-- View that will be shown while the fullscreen video loads. For example you could include
             a "Loading..." message. However, in this particular example this view is actually defined in
-            view_loading_video.xml and inflated programmatically in ExampleActivity.java. The reason for
+            view_loading_video.xml and inflated programmatically in MainActivity.java. The reason for
             this is to keep the main layout (this file) cleaner. -->
             <!-- <View
                 android:id="@+id/videoLoading"

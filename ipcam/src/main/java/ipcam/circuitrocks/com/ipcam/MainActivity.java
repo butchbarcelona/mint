@@ -8,14 +8,12 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,12 +29,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 
 import ipcam.circuitrocks.com.ipcam.ble.BlunoLibrary;
 
 
-public class ExampleActivity extends BlunoLibrary implements View.OnClickListener {
+public class MainActivity extends BlunoLibrary implements View.OnClickListener {
 
 
     private VideoEnabledWebView webView;
@@ -254,6 +251,8 @@ public class ExampleActivity extends BlunoLibrary implements View.OnClickListene
                 serialSend("x");
                 break;
         }
+
+        serialSend("0");
     }
 
     private class InsideWebViewClient extends WebViewClient {
@@ -407,7 +406,7 @@ public class ExampleActivity extends BlunoLibrary implements View.OnClickListene
         protected void onPostExecute(Void aVoid) {
 
             if(jsonResults == null){
-                new AlertDialog.Builder(ExampleActivity.this)
+                new AlertDialog.Builder(MainActivity.this)
                         .setTitle("Error")
                         .setMessage("Could not connect to:"+URL)
                         .setPositiveButton("Retry", new DialogInterface.OnClickListener() {

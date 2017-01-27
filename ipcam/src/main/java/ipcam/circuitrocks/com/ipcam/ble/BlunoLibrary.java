@@ -127,7 +127,7 @@ public abstract  class BlunoLibrary  extends AppCompatActivity {
     public void onCreateProcess() {
         if (!initiate()) {
             Toast.makeText(mainContext, R.string.error_bluetooth_not_supported,
-              Toast.LENGTH_SHORT).show();
+              Toast.LENGTH_LONG).show();
             ((Activity) mainContext).finish();
         }
 
