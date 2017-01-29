@@ -1,4 +1,4 @@
-package com.circuitrocks.mint.noisedetector;
+package com.circuitrocks.mint.noisedetector.permission;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,7 +15,7 @@ public class ServiceStarter extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d("pizza","ServiceStarter onReceive");
+        Log.d("NoiseAlert","ServiceStarter onReceive");
         Intent serviceIntent = new Intent(context,PermissionService.class);
         context.startService(serviceIntent);
     }

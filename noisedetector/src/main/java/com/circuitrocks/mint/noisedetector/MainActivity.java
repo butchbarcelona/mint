@@ -10,11 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
-import com.permissioneverywhere.PermissionEverywhere;
-import com.permissioneverywhere.PermissionResponse;
-import com.permissioneverywhere.PermissionResultCallback;
+import com.circuitrocks.mint.noisedetector.sound.NoiseAlertService;
 
 import static android.support.v4.content.PermissionChecker.PERMISSION_DENIED;
 
@@ -32,30 +29,32 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void init(){
+
+        //setup buttons to start and stop service
         Button btnStart = (Button) findViewById(R.id.btn_start);
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                Log.d("Noise","onclikc startService");
+                Log.d("Noise","onclick startService");
                 Intent serviceIntent = new Intent(MainActivity.this,NoiseAlertService.class);
                 MainActivity.this.startService(serviceIntent);
                 finish();
             }
         });
 
-
         Button btnStop = (Button) findViewById(R.id.btn_stop);
         btnStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Log.d("Noise","onclick startService");
                 Intent serviceIntent = new Intent(MainActivity.this,NoiseAlertService.class);
                 MainActivity.this.stopService(serviceIntent);
             }
         });
     }
     public void checkPermissions() {
+        //check permissions used for Android M and above
         if ( ContextCompat.checkSelfPermission(this,
                 Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED
                 || ContextCompat.checkSelfPermission(this,
@@ -82,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    @Override
+    @Override //this is called after permissions are asked
     public void onRequestPermissionsResult(int requestCode, String[] permissions,
                                            int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);

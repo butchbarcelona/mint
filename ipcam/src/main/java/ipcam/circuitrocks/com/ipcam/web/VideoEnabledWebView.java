@@ -1,4 +1,4 @@
-package ipcam.circuitrocks.com.ipcam;
+package ipcam.circuitrocks.com.ipcam.web;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

@@ -196,6 +196,11 @@ public abstract  class BlunoLibrary  extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
     public void onResumeProcess() {
         System.out.println("BlUNOActivity onResume");
         // Ensures Bluetooth is enabled on the device. If Bluetooth is not

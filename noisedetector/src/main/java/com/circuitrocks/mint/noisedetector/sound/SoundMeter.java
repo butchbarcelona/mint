@@ -1,4 +1,4 @@
-package com.circuitrocks.mint.noisedetector;
+package com.circuitrocks.mint.noisedetector.sound;
 
 import android.media.MediaRecorder;
 
@@ -15,6 +15,7 @@ public class SoundMeter {
 
         if (mRecorder == null) {
 
+            //need to open microphone and record voice
             mRecorder = new MediaRecorder();
             mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
             mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);

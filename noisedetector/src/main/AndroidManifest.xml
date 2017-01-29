@@ -18,7 +18,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/tank"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -34,34 +34,24 @@
         </activity>
 
         <activity
-            android:name=".NoiseAlertDialogActivity"
+            android:name=".sound.NoiseAlertDialogActivity"
             android:theme="@android:style/Theme.Dialog"
             android:label="@string/app_name">
         </activity>
 
         <service
-            android:name=".NoiseAlertService"
+            android:name=".sound.NoiseAlertService"
             android:exported="true"></service>
 
 
         <service
-            android:name=".PermissionService"
+            android:name=".permission.PermissionService"
             android:enabled="true"
             android:exported="true" >
         </service>
-        <!--  <receiver
-              android:name=".NoiseAlertReceiver"
-              android:enabled="true" >
-
-              <intent-filter>
-                  <action android:name="android.intent.action.MAIN"/>
-                  <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                  <category android:name="android.intent.category.HOME"/>
-              </intent-filter>
-          </receiver>-->
 
         <receiver
-            android:name=".ServiceStarter"
+            android:name=".permission.ServiceStarter"
             android:enabled="true"
             android:exported="true" >
             <intent-filter>

@@ -7,6 +7,7 @@ package ipcam.circuitrocks.com.ipcam;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -15,6 +16,8 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -31,18 +34,20 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import ipcam.circuitrocks.com.ipcam.ble.BlunoLibrary;
+import ipcam.circuitrocks.com.ipcam.web.VideoEnabledWebChromeClient;
+import ipcam.circuitrocks.com.ipcam.web.VideoEnabledWebView;
 
 
-public class MainActivity extends BlunoLibrary implements View.OnClickListener {
+public class MainActivity extends BlunoLibrary implements View.OnClickListener, View.OnTouchListener {
 
 
     private VideoEnabledWebView webView;
     private VideoEnabledWebChromeClient webChromeClient;
 
-    ImageButton btnUp, btnDown, btnLeft, btnRight, btnClockwise, btnCounter;
+    ImageButton btnUp, btnDown, btnLeft, btnRight;
     ProgressBar progress;
 
-    String URL = "http://192.168.1.37:8080";
+    String URL = "http://192.168.1.32:8080";
 
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
 
@@ -58,6 +63,31 @@ public class MainActivity extends BlunoLibrary implements View.OnClickListener {
 
         requestPermission();
 
+    }
+
+    //override back button
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+        if (Integer.parseInt(android.os.Build.VERSION.SDK) > 5
+                && keyCode == KeyEvent.KEYCODE_BACK
+                && event.getRepeatCount() == 0) {
+            Log.d("NoiseAlert", "onKeyDown Called");
+            onBackPressed();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+
+    //override back button
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Log.d("NoiseAlert", "onBackPressed Called");
+        Intent setIntent = new Intent(Intent.ACTION_MAIN);
+        setIntent.addCategory(Intent.CATEGORY_HOME);
+        setIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(setIntent);
     }
 
     public void requestPermission(){
@@ -89,16 +119,12 @@ public class MainActivity extends BlunoLibrary implements View.OnClickListener {
         btnDown = (ImageButton) findViewById(R.id.btn_down);
         btnLeft = (ImageButton) findViewById(R.id.btn_left);
         btnRight = (ImageButton) findViewById(R.id.btn_right);
-        btnClockwise = (ImageButton) findViewById(R.id.btn_clockwise);
-        btnCounter = (ImageButton) findViewById(R.id.btn_counter);
 
-        btnUp.setOnClickListener(this);
-        btnDown.setOnClickListener(this);
-        btnLeft.setOnClickListener(this);
-        btnRight.setOnClickListener(this);
+        btnUp.setOnTouchListener(this);
+        btnDown.setOnTouchListener(this);
+        btnLeft.setOnTouchListener(this);
+        btnRight.setOnTouchListener(this);
 
-        btnCounter.setOnClickListener(this);
-        btnClockwise.setOnClickListener(this);
 
         // Save the web view
         webView = (VideoEnabledWebView)findViewById(R.id.webView);
@@ -178,6 +204,8 @@ public class MainActivity extends BlunoLibrary implements View.OnClickListener {
 
                     //save URL
                     URL = Uri.parse(etURL.getText().toString().trim()).toString();
+
+                    //this is called to request landscape view for ipcam feed
                     new WebViewSetOrientation().execute();
                 }
             })
@@ -190,43 +218,16 @@ public class MainActivity extends BlunoLibrary implements View.OnClickListener {
             .show();
     }
 
+
+
     @Override
     public void onSerialReceived(String bleData) {
         bleData = bleData.trim().toUpperCase();
-        Log.e("bluno", "data:"+ bleData);
+        Log.e("NoiseAlert", "data:"+ bleData);
 
-
-        String data = ((bleData.length() > 0 && !bleData.contains("N"))?bleData.substring(1):"0.0");
-/*
-        if(bleData.length()> 0) {
-            try {
-                switch (bleData.charAt(0)) {
-                    case 'A':
-                        rpm = Float.valueOf(data);
-                        mph = rpm * multiplier;
-                        break;
-                    case 'B':
-                        torque = Float.valueOf(data) * torqueMultiplier;
-                        break;
-                    case 'C':
-                        temp = Float.valueOf(data);
-                        graphFragment.setfTemp(temp);
-                        break;
-                    case 'D':
-                        humidity = Float.valueOf(data);
-                        graphFragment.setfHumidity(humidity);
-                        break;
-                    case 'E':
-                        engineTemp = Float.valueOf(data);
-                        graphFragment.setfEngineTemp(engineTemp);
-                        break;
-
-                }
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        }*/
     }
+
+
 
     @Override
     public void onClick(View view) {
@@ -244,16 +245,40 @@ public class MainActivity extends BlunoLibrary implements View.OnClickListener {
             case R.id.btn_right:
                 serialSend("d");
                 break;
-            case R.id.btn_clockwise:
-                serialSend("z");
-                break;
-            case R.id.btn_counter:
-                serialSend("x");
-                break;
+
         }
 
         serialSend("0");
     }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent event) {
+        switch(event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                switch(view.getId()){
+                    case R.id.btn_down:
+                        serialSend("s");
+                        break;
+                    case R.id.btn_up:
+                        serialSend("w");
+                        break;
+                    case R.id.btn_left:
+                        serialSend("a");
+                        break;
+                    case R.id.btn_right:
+                        serialSend("d");
+                        break;
+
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+
+                serialSend("0");
+                break;
+        }
+        return false;
+    }
+
 
     private class InsideWebViewClient extends WebViewClient {
         @Override
@@ -293,24 +318,6 @@ public class MainActivity extends BlunoLibrary implements View.OnClickListener {
         }
     }
 
-    @Override
-    public void onBackPressed()
-    {
-        // Notify the VideoEnabledWebChromeClient, and handle it ourselves if it doesn't handle it
-        if (!webChromeClient.onBackPressed())
-        {
-            if (webView.canGoBack())
-            {
-                webView.goBack();
-            }
-            else
-            {
-                // Standard back button implementation (for example this could close the app)
-                super.onBackPressed();
-            }
-        }
-    }
-
 
     protected void onResume() {
         super.onResume();
@@ -337,6 +344,7 @@ public class MainActivity extends BlunoLibrary implements View.OnClickListener {
     }
 
 
+    //this is called to request landscape view for ipcam feed
     public class WebViewSetOrientation extends AsyncTask<Void, Void, Void> {
 
         String strUrl = //URL.replace("http://","")+
@@ -353,13 +361,13 @@ public class MainActivity extends BlunoLibrary implements View.OnClickListener {
         @Override
         protected Void doInBackground(Void... voids) {
 
-            Log.d("metal", "url:" + strUrl);
+            Log.d("NoiseAlert", "url:" + strUrl);
             HttpURLConnection conn = null;
             jsonResults = new StringBuilder();
             try {
 
                 URL url = new URL( Uri.parse(URL + "/settings/orientation?set=landscape").toString());
-                Log.d("metal", "url:" + url.getHost());
+                Log.d("NoiseAlert", "url:" + url.getHost());
 
                 conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(30000);
@@ -378,17 +386,17 @@ public class MainActivity extends BlunoLibrary implements View.OnClickListener {
                 }
 
             } catch (MalformedURLException e) {
-                Log.e("metal", "Error processing URL", e);
+                Log.e("NoiseAlert", "Error processing URL", e);
                 jsonResults = null;
                 return null;
             } catch (IOException e) {
                 e.printStackTrace();
-                Log.e("metal", "Error connecting API", e);
+                Log.e("NoiseAlert", "Error connecting API", e);
                 jsonResults = null;
                 return null;
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.e("metal", "Error connecting API", e);
+                Log.e("NoiseAlert", "Error connecting API", e);
                 jsonResults = null;
             }
             finally {

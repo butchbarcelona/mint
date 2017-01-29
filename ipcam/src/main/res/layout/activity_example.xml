@@ -16,11 +16,9 @@
         <RelativeLayout
             android:id="@+id/nonVideoLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp">
+            android:layout_height="match_parent" >
 
-            <ipcam.circuitrocks.com.ipcam.VideoEnabledWebView
+            <ipcam.circuitrocks.com.ipcam.web.VideoEnabledWebView
                 android:id="@+id/webView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
@@ -55,6 +53,7 @@
 
 
         <ImageButton
+            android:background="@android:color/background_dark"
             android:layout_width="50dp"
             android:layout_height="50dp"
             app:srcCompat="@android:drawable/ic_media_play"
@@ -64,17 +63,18 @@
             android:layout_toStartOf="@+id/btn_up" />
 
         <ImageButton
+            android:background="@android:color/background_dark"
             android:layout_width="50dp"
             android:layout_height="50dp"
             app:srcCompat="@android:drawable/ic_media_play"
             android:id="@+id/btn_right"
             android:rotation="360"
-            android:layout_marginBottom="36dp"
+            android:layout_marginBottom="50dp"
             android:layout_alignBottom="@+id/btn_down"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="27dp" />
 
-        <ImageButton
+<!--        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:srcCompat="@android:drawable/ic_menu_revert"
@@ -82,16 +82,19 @@
             android:scaleY="-1"
             android:layout_alignTop="@+id/btn_counter"
             android:layout_toEndOf="@+id/btn_counter"
-            android:layout_marginStart="13dp" />
+            android:layout_marginStart="13dp" />-->
 
         <ImageButton
+            android:background="@android:color/background_dark"
             android:layout_width="50dp"
             android:layout_height="50dp"
             app:srcCompat="@android:drawable/ic_media_play"
             android:id="@+id/btn_down"
             android:rotation="90"
             android:layout_alignParentBottom="true"
+            android:layout_marginBottom="40dp"
             android:layout_toStartOf="@+id/btn_right" />
+<!--
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -102,8 +105,10 @@
             android:layout_marginStart="14dp"
             android:layout_alignBottom="@+id/btn_left"
             android:layout_alignParentStart="true" />
+-->
 
         <ImageButton
+            android:background="@android:color/background_dark"
             android:layout_width="50dp"
             android:layout_height="50dp"
             app:srcCompat="@android:drawable/ic_media_play"

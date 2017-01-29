@@ -1,4 +1,4 @@
-package com.circuitrocks.mint.noisedetector;
+package com.circuitrocks.mint.noisedetector.permission;
 
 import android.Manifest;
 import android.app.Service;
@@ -7,6 +7,8 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.circuitrocks.mint.noisedetector.sound.NoiseAlertService;
+import com.circuitrocks.mint.noisedetector.R;
 import com.permissioneverywhere.PermissionEverywhere;
 import com.permissioneverywhere.PermissionResponse;
 import com.permissioneverywhere.PermissionResultCallback;
